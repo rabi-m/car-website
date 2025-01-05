@@ -1,0 +1,54 @@
+name: CI/CD for Car Website
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    # 1. Checkout the repository
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # 2. Setup Node.js for client
+    - name: Setup Node.js for frontend
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16'
+
+    # 3. Install frontend dependencies
+    - name: Install frontend dependencies
+      run: |
+        cd client
+        npm install
+
+    # 4. Run frontend build
+    - name: Build frontend
+      run: |
+        cd client
+        npm run build
+
+    # 5. Setup Node.js for server
+    - name: Setup Node.js for backend
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16'
+
+    # 6. Install backend dependencies
+    - name: Install backend dependencies
+      run: |
+        cd server
+        npm install
+
+    # 7. Test backend server
+    - name: Test backend server
+      run: |
+        cd server
+        node index.js
